@@ -6,7 +6,9 @@ V = nimfa.examples.medulloblastoma.read(normalize=True)
 consensus_matrix = []
 cophenetic_coeff = []
 for x in range(2, 50):
-    lsnmf = nimfa.Lsnmf(V, seed='random_vcol', rank=2 * x, max_iter=100)
+    rank = 2 * x
+    print(rank)
+    lsnmf = nimfa.Lsnmf(V, seed='random_vcol', rank=rank, max_iter=100)
     lsnmf_fit = lsnmf()
     consensus_matrix.append(np.array(lsnmf.consensus()))
     a = lsnmf.coph_cor()
