@@ -45,5 +45,67 @@ class ToyMatrix:
         np.random.shuffle(self.H)
         self.X = np.dot(self.W, self.H)
 
+    def toy_matrix_multilple(self):
+
+        w = np.ones((1, 10))
+        h1 = np.ones((1, 30))
+        h2 = np.ones((1, 40))
+        h3 = np.ones((1, 50))
+
+        self.W = np.zeros((30, 3))
+        self.H1 = np.zeros((3, 90))
+        self.H2 = np.zeros((3, 120))
+        self.H3 = np.zeros((3, 150))
+
+        self.W[0:10, 0:1] = w.T
+        self.W[10:20, 1:2] = w.T
+        self.W[20:30, 2:3] = w.T
+
+        self.H1[0:1, 0:30] = h1
+        self.H1[1:2, 30:60] = h1
+        self.H1[2:3, 60:90] = h1
+
+        self.H2[0:1, 0:40] = h2
+        self.H2[1:2, 40:80] = h2
+        self.H2[2:3, 80:120] = h2
+
+        self.H3[0:1, 0:50] = h3
+        self.H3[1:2, 50:100] = h3
+        self.H3[2:3, 100:150] = h3
+
+        X1 = np.dot(self.W, self.H1)
+        X2 = np.dot(self.W, self.H2)
+        X3 = np.dot(self.W, self.H3)
+        np.random.rand(3, 2)
+
+        self.XX1 = X1 + 0.5 * np.random.rand(30, 90)
+        self.XX2 = X2 + 0.5 * np.random.rand(30, 120)
+        self.XX3 = X3 + 0.5 * np.random.rand(30, 150)
+
+        # plt.imshow(self.XX1, cmap='hot', interpolation='nearest')
+        # plt.colorbar()
+        # plt.show()
+
+        # Permutations
+        # p = np.random.permutation(30)
+        # p1 = np.random.permutation(90)
+        # p2 = np.random.permutation(120)
+        # p3 = np.random.permutation(150)
+
+        # RXX1, RXX2, RXX3 = XX1, XX2, XX3
+        # for i in range(30):
+        #     RX1[0:i, :] = XX1[p[i], :]
+        #     RX2[0:i, :] = XX2[p[i], :]
+        #     RX3[0:i, :] = XX3[p[i], :]
+        #
+        # for i in range(90):
+        #     RXX1[:, 0:i] = RX1[:, 0:p1[i]]
+        #
+        # for i in range(120):
+        #     RXX2[:, 0:i] = RX2[:, 0:p2[i]]
+        #
+        # for i in range(150):
+        #     RXX3[:, 0:i] = RX3[:, 0:p3[i]]
+
     def cluster(self):
         return np.argmax(self.H, 0)
