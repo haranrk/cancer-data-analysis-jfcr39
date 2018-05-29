@@ -6,13 +6,14 @@ import os
 from pathlib import Path as pth
 
 os.chdir(pth(__file__).parent)
-# x_ori = pd.read_csv('data/input_CCLE_drug_IC50_zero-one.csv', index_col=0, header=0)
-# x = clean_df(x_ori).as_matrix()
-# k_list = [30, 25, 10, 3, 40,2,5,6,40,]
+x_ori = pd.read_csv('data/input_CCLE_drug_IC50_zero-one.csv', index_col=0, header=0)
+x = clean_df(x_ori).as_matrix()
+k_list = [30, 25, 10, 3, 40,2,5,6,40,]
+data_name = "CCLE_drug"
 
-x = nf.examples.medulloblastoma.read(normalize=True)
-data_name = "medulloblastoma"
-k_list = list(range(2, 10))
+# x = nf.examples.medulloblastoma.read(normalize=True)
+# data_name = "medulloblastoma"
+# k_list = list(range(2, 10))
 
 k_list.sort()
 
