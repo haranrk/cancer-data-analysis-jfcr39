@@ -3,16 +3,14 @@ import numpy as np
 
 class ToyMatrix:
     def __init__(self, method='a'):
-        self.W = 0
-        self.H = 0
-        self.X = 0
-
         if method == 'a':
             self.toy_matrix_a()
         elif method == 'b':
             self.toy_matrix_b()
         elif method == 'c':
             self.toy_matrix_c()
+        elif method == 'm':
+            self.toy_matrix_multilple()
 
     def toy_matrix_a(self, m=40, n=30, k=2, seed=0):
         np.random.seed(seed)
@@ -53,34 +51,37 @@ class ToyMatrix:
         h3 = np.ones((1, 50))
 
         self.W = np.zeros((30, 3))
-        self.H1 = np.zeros((3, 90))
-        self.H2 = np.zeros((3, 120))
-        self.H3 = np.zeros((3, 150))
+        self.H = {}
+        self.x = {}
+
+        self.H['a'] = np.zeros((3, 90))
+        self.H['b'] = np.zeros((3, 120))
+        self.H['c'] = np.zeros((3, 150))
 
         self.W[0:10, 0:1] = w.T
         self.W[10:20, 1:2] = w.T
         self.W[20:30, 2:3] = w.T
 
-        self.H1[0:1, 0:30] = h1
-        self.H1[1:2, 30:60] = h1
-        self.H1[2:3, 60:90] = h1
+        self.H['a'][0:1, 0:30] = h1
+        self.H['a'][1:2, 30:60] = h1
+        self.H['a'][2:3, 60:90] = h1
 
-        self.H2[0:1, 0:40] = h2
-        self.H2[1:2, 40:80] = h2
-        self.H2[2:3, 80:120] = h2
+        self.H['b'][0:1, 0:40] = h2
+        self.H['b'][1:2, 40:80] = h2
+        self.H['b'][2:3, 80:120] = h2
 
-        self.H3[0:1, 0:50] = h3
-        self.H3[1:2, 50:100] = h3
-        self.H3[2:3, 100:150] = h3
+        self.H['c'][0:1, 0:50] = h3
+        self.H['c'][1:2, 50:100] = h3
+        self.H['c'][2:3, 100:150] = h3
 
-        X1 = np.dot(self.W, self.H1)
-        X2 = np.dot(self.W, self.H2)
-        X3 = np.dot(self.W, self.H3)
+        X1 = np.dot(self.W, self.H['a'])
+        X2 = np.dot(self.W, self.H['b'])
+        X3 = np.dot(self.W, self.H['c'])
         np.random.rand(3, 2)
 
-        self.XX1 = X1 + 0.5 * np.random.rand(30, 90)
-        self.XX2 = X2 + 0.5 * np.random.rand(30, 120)
-        self.XX3 = X3 + 0.5 * np.random.rand(30, 150)
+        self.x['a'] = X1 + 0.5 * np.random.rand(30, 90)
+        self.x['b'] = X2 + 0.5 * np.random.rand(30, 120)
+        self.x['c'] = X3 + 0.5 * np.random.rand(30, 150)
 
         # plt.imshow(self.XX1, cmap='hot', interpolation='nearest')
         # plt.colorbar()
