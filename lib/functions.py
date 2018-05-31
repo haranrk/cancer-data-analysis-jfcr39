@@ -29,7 +29,7 @@ def heatmap_dict(x: dict, title, show_flag=1):
     i = 1
     for key in x:
         plt.subplot(10 + length * 100 + i)
-        plt.title(key)
+        plt.ylabel(key)
         plt.imshow(x[key], cmap="magma", interpolation="nearest")
         i += 1
     if show_flag == 1:

@@ -12,9 +12,9 @@ file_list = ["input_CCLE_binmat",
              "input_CCLE_linage_binmat_5data_modified",
              ]
 
-s_file_list = ["input_small_data_DRUG.zero-one",
-               "input_small_data_MUT.zero-one",
-               "input_small_data_PROT.zero-one",
+s_file_list = ["DRUG",
+               "MUT",
+               "PROT",
                ]
 x = {}
 # for file in file_list:
@@ -33,16 +33,16 @@ for file in s_file_list:
     x[file] = clean_df(x[file])
     print("Cleaned %s" % file, x[file].shape)
 
-k_list = [2, 3, 5]
+k_list = [2, 3, 5, 7, 4, 10]
 k_list.sort()
 
 m = {}
 for k in k_list:
-    m[k] = JointNmfClass(x, k, 100, 1)
-    m[k].super_wrapper(verbose=1)
+    m[k] = JointNmfClass(x, k, 500, 100)
+    m[k].super_wrapper(verbose=0)
     print("K = %i Error = %f" % (k, m[k].error))
     # heatmap_dict(x, "x | k: %i" % k)
     heatmap_dict(m[k].cmh, "h | k: %i" % k)
     # heatmap_dict(m[k].z_score, "z score | k: %i" % k)
     heatmap(m[k].cmw, "w k: %i" % k)
-    heatmap_dict(m[k].cmz, "cmz k: %i" % k)
+    # heatmap_dict(m[k].cmz, "cmz k: %i" % k)

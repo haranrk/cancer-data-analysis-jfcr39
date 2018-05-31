@@ -98,7 +98,7 @@ class JointNmfClass:
     def calc_error(self):
         self.error = 0
         for key in self.x:
-            self.error += np.mean(self.x[key] - np.dot(self.w, self.h[key]))
+            self.error += np.mean(np.abs(self.x[key] - np.dot(self.w, self.h[key])))
 
     # TODO - Understand this func
     def reorderConsensusMatrix(self, M):
