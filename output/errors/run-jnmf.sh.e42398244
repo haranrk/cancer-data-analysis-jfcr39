@@ -1,8 +1,8 @@
 /sshare3/home/haranrk/nmf-experiment/lib/functions.py:25: FutureWarning: Method .as_matrix will be removed in a future version. Use .values instead.
   return y.as_matrix()
-/sshare3/home/haranrk/nmf-experiment/lib/functions.py:77: FutureWarning: Method .as_matrix will be removed in a future version. Use .values instead.
-  reorderM = pd.DataFrame(M.as_matrix()[:, ivl][ivl, :], index=M.columns[ivl], columns=M.columns[ivl])
 /sshare3/home/haranrk/nmf-experiment/lib/functions.py:78: FutureWarning: Method .as_matrix will be removed in a future version. Use .values instead.
+  reorderM = pd.DataFrame(M.as_matrix()[:, ivl][ivl, :], index=M.columns[ivl], columns=M.columns[ivl])
+/sshare3/home/haranrk/nmf-experiment/lib/functions.py:79: FutureWarning: Method .as_matrix will be removed in a future version. Use .values instead.
   return reorderM.as_matrix()
 /home/haranrk/.local/lib/python3.6/site-packages/matplotlib/cbook/deprecation.py:107: MatplotlibDeprecationWarning: Adding an axes using the same arguments as a previous axes currently reuses the earlier instance.  In a future version, a new instance will always be created and returned.  Meanwhile, this warning can be suppressed, and the future behavior ensured, by passing a unique label to each axes instance.
   warnings.warn(message, mplDeprecation, stacklevel=1)

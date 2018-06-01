@@ -1,0 +1,77 @@
+/bin/sh
+/bin/sh
+Using non-interactive Agg backend
+Current working directory: /sshare3/home/haranrk/nmf-experiment
+Imported input_CCLE_binmat (1055, 1639)
+Cleaned input_CCLE_binmat (905, 1639)
+Imported input_CCLE_drug_IC50_zero-one (1055, 24)
+Cleaned input_CCLE_drug_IC50_zero-one (305, 24)
+Imported input_CCLE_linage_binmat_5data_modified (1055, 24)
+Cleaned input_CCLE_linage_binmat_5data_modified (1055, 24)
+Imported DRUG from /sshare3/home/haranrk/nmf-experiment/data/small/DRUG.csv (39, 67)
+Cleaned DRUG (39, 67)
+Imported MUT from /sshare3/home/haranrk/nmf-experiment/data/small/MUT.csv (39, 7)
+Cleaned MUT (39, 7)
+Imported PROT from /sshare3/home/haranrk/nmf-experiment/data/small/PROT.csv (39, 19)
+Cleaned PROT (39, 19)
+Super niter: 50 Niter: 250
+	Dataset: simulated
+		Standard NMF
+			SNMF K = 2 Error = 0.924125
+			SNMF K = 3 Error = 0.768932
+			SNMF K = 4 Error = 0.967573
+			SNMF K = 5 Error = 1.104550
+			SNMF K = 7 Error = 1.197218
+			SNMF K = 10 Error = 1.381131
+	Integrative NMF
+		Lambda(L)1 = 1.000000
+			INMF K = 2 Error = 0.866300
+			INMF K = 3 Error = 0.370059
+			INMF K = 4 Error = 0.363700
+			INMF K = 5 Error = 0.356881
+			INMF K = 7 Error = 0.345474
+			INMF K = 10 Error = 0.323570
+		Lambda(L)2 = 0.100000
+			INMF K = 2 Error = 0.950691
+			INMF K = 3 Error = 0.548072
+			INMF K = 4 Error = 0.556450
+			INMF K = 5 Error = 0.558748
+			INMF K = 7 Error = 0.540641
+			INMF K = 10 Error = 0.501205
+		Lambda(L)3 = 10.000000
+			INMF K = 2 Error = 0.859969
+			INMF K = 3 Error = 0.353585
+			INMF K = 4 Error = 0.346249
+			INMF K = 5 Error = 0.334900
+			INMF K = 7 Error = 0.322085
+			INMF K = 10 Error = 0.300963
+	Dataset: small
+		Standard NMF
+			SNMF K = 2 Error = 0.608257
+			SNMF K = 3 Error = 0.673313
+			SNMF K = 4 Error = 0.707900
+			SNMF K = 5 Error = 0.722860
+			SNMF K = 7 Error = 0.755352
+			SNMF K = 10 Error = 0.771953
+	Integrative NMF
+		Lambda(L)1 = 1.000000
+			INMF K = 2 Error = 0.573470
+			INMF K = 3 Error = 0.556002
+			INMF K = 4 Error = 0.523079
+			INMF K = 5 Error = 0.504692
+			INMF K = 7 Error = 0.445566
+			INMF K = 10 Error = 0.396498
+		Lambda(L)2 = 0.100000
+			INMF K = 2 Error = 0.606427
+			INMF K = 3 Error = 0.599052
+			INMF K = 4 Error = 0.563692
+			INMF K = 5 Error = 0.555892
+			INMF K = 7 Error = 0.501048
+			INMF K = 10 Error = 0.439245
+		Lambda(L)3 = 10.000000
+			INMF K = 2 Error = 0.573297
+			INMF K = 3 Error = 0.551259
+			INMF K = 4 Error = 0.522604
+			INMF K = 5 Error = 0.495925
+			INMF K = 7 Error = 0.434709
+			INMF K = 10 Error = 0.382359
