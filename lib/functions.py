@@ -37,7 +37,7 @@ def heatmap_dict(x: dict, title, show_flag=1):
         plt.show()
 
 
-def reorderConsensusMatrix(M):
+def reorderConsensusMatrix(M: np.array):
     M = pd.DataFrame(M)
     Y = 1 - M
     Z = linkage(squareform(Y), method='average')
@@ -46,20 +46,3 @@ def reorderConsensusMatrix(M):
     reorderM = pd.DataFrame(M.as_matrix()[:, ivl][ivl, :], index=M.columns[ivl], columns=M.columns[ivl])
     return reorderM.as_matrix()
 
-
-def rc(M):
-    x = M
-    M = pd.DataFrame(M)
-    Y = 1 - M
-    yd = squareform(Y)
-    Z = linkage(yd, method='average')
-    ivl = leaves_list(Z)
-    ivl = ivl[::-1]
-    reorderM = pd.DataFrame(M.as_matrix()[:, ivl][ivl, :], index=M.columns[ivl], columns=M.columns[ivl])
-    return reorderM.as_matrix()
-#
-# x = np.random.random((10,10))
-# x = np.dot(x, x.T)
-# x = x/x.max()
-# x[x <= np.eye(10)] = 1
-# y = rc(x)

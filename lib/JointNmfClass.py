@@ -1,7 +1,4 @@
-import numpy as np
 from lib.functions import *
-from scipy.cluster.hierarchy import linkage, leaves_list
-from scipy.spatial.distance import squareform
 
 
 class JointNmfClass:
@@ -16,10 +13,8 @@ class JointNmfClass:
         self.w = None
         self.h = None
         self.z_score = None
-
-        self.initialize_variables()
-        self.eps = np.finfo(self.w.dtype).eps
-        self.calc_error()
+        self.error = float('inf')
+        self.eps = np.finfo(list(x.values())[0].dtype).eps
 
     def initialize_variables(self):
         number_of_samples = list(self.x.values())[0].shape[0]
@@ -32,27 +27,6 @@ class JointNmfClass:
             self.cmh[key] = np.zeros((self.x[key].shape[1], self.x[key].shape[1]))
             self.z_score[key] = np.zeros((self.k, self.x[key].shape[1]))
             self.cmz = self.cmh
-        self.initialize_wh()
-
-    def initialize_wh(self):
-        number_of_samples = list(self.x.values())[0].shape[0]
-        self.w = np.random.rand(number_of_samples, self.k)
-        self.h = {}
-        for key in self.x:
-            self.h[key] = np.random.rand(self.k, self.x[key].shape[1])
-
-    def update_weights(self):
-        w = self.w
-        numerator = np.zeros(w.shape)
-        denominator = np.zeros((w.shape[1], w.shape[1]))
-
-        for key, value in self.x.items():
-            numerator = numerator + np.dot(self.x[key], self.h[key].T)
-            denominator = denominator + np.dot(self.h[key], self.h[key].T)
-            self.h[key] = self.h[key] * np.dot(w.T, self.x[key]) / np.dot(np.dot(w.T, w), self.h[key])
-
-        self.w = self.w * numerator / np.dot(w, denominator)
-        self.calc_error()
 
     def wrapper_update(self, verbose=0):
         for i in range(1, self.niter):
@@ -106,4 +80,8 @@ class JointNmfClass:
         for key in self.x:
             self.error += np.mean(np.abs(self.x[key] - np.dot(self.w, self.h[key])))
 
-    # TODO - Understand this func
+    def update_weights(self):
+        raise NotImplementedError("Must override update_weights")
+
+    def initialize_wh(self):
+        raise NotImplementedError("Must override initialize_wh")
