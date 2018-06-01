@@ -3,6 +3,13 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from scipy.cluster.hierarchy import linkage, leaves_list
 from scipy.spatial.distance import squareform
+import os
+from pathlib import Path as pth
+import sys
+
+os.chdir(pth(__file__).parent.parent)
+cwd = pth(os.getcwd())
+print("Current working directory: %s" % cwd)
 
 
 def clean_df(x: pd.DataFrame):
@@ -17,24 +24,43 @@ def rms(x: np.array, y: np.array):
     return np.mean(np.abs(x - y))
 
 
-def heatmap(x, title, show_flag=1):
-    plt.suptitle(title)
-    plt.imshow(x, cmap="magma", interpolation="nearest")
-    if show_flag == 1:
-        plt.show()
+def heatmap(x, title, show_flag=1, save=0):
+    if str(x.__class__) == "<class 'numpy.ndarray'>":
+        plt.suptitle(title)
+        plt.imshow(x, cmap="magma", interpolation="nearest")
+    elif str(x.__class__) == "<class 'dict'>":
+        plt.suptitle(title)
+        length = x.__len__()
+        i = 1
+        for key in x:
+            plt.subplot(10 + length * 100 + i)
+            plt.ylabel(key)
+            plt.imshow(x[key], cmap="magma", interpolation="nearest")
+            i += 1
 
-
-def heatmap_dict(x: dict, title, show_flag=1):
-    plt.suptitle(title)
-    length = x.__len__()
-    i = 1
-    for key in x:
-        plt.subplot(10 + length * 100 + i)
-        plt.ylabel(key)
-        plt.imshow(x[key], cmap="magma", interpolation="nearest")
-        i += 1
-    if show_flag == 1:
+    if save == 1:
+        fig_path = cwd / pth("plots/%s" % pth(sys.argv[0]).stem)
+        fig_path.mkdir(exist_ok=True)
+        fig_path = fig_path / pth("%s.jpg" % title)
+        plt.savefig(fig_path)
+    elif show_flag == 1:
         plt.show()
+#
+# def heatmap_dict(x: dict, title, show_flag=1, save=0):
+#     plt.suptitle(title)
+#     length = x.__len__()
+#     i = 1
+#     for key in x:
+#         plt.subplot(10 + length * 100 + i)
+#         plt.ylabel(key)
+#         plt.imshow(x[key], cmap="magma", interpolation="nearest")
+#         i += 1
+#
+#     if save == 1:
+#         fig_path = cwd / pth("plots/%s.jpg" % title)
+#         plt.savefig(fig_path)
+#     elif show_flag == 1:
+#         plt.show()
 
 
 def reorderConsensusMatrix(M: np.array):
@@ -45,4 +71,3 @@ def reorderConsensusMatrix(M: np.array):
     ivl = ivl[::-1]
     reorderM = pd.DataFrame(M.as_matrix()[:, ivl][ivl, :], index=M.columns[ivl], columns=M.columns[ivl])
     return reorderM.as_matrix()
-
