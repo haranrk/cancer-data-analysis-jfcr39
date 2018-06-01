@@ -5,8 +5,8 @@ from pathlib import Path as pth
 import pandas as pd
 
 # Mutable Variables
-k_list = [2, 3, 5, 7, 4, 10, 11]
-lamb = [0.1, 1, 10]
+k_list = [2, 3, 5, 7, 4, 10]
+lamb = [1, 0.1, 10]
 save = 1
 niter = 500
 super_niter = 50
@@ -14,15 +14,15 @@ data_set = "s"
 
 # Input
 x = {}
-s_file_list = ["DRUG",
-               "MUT",
-               "PROT",
-               ]
-for file in s_file_list:
-    a = pth(os.getcwd()) / pth("data/small/%s.csv" % file)
+file_list = ["input_CCLE_binmat",
+             "input_CCLE_drug_IC50_zero-one",
+             "input_CCLE_linage_binmat_5data_modified",
+             ]
+for file in file_list:
+    a = pth(os.getcwd()) / pth("data/%s.csv" % file)
     x[file] = pd.read_csv(a, index_col=0, header=0)
 
-    print("Imported %s from %s" % (file, a), x[file].shape)
+    print("Imported %s" % file, x[file].shape)
     x[file] = clean_df(x[file])
     print("Cleaned %s" % file, x[file].shape)
 
@@ -45,7 +45,6 @@ i=1
 print("Integrative NMF")
 for l in lamb:
     print("Lambda%i = %f" % (i, l))
-    i+=1
     for k in k_list:
         im[k] = IntegrativeNmfClass(x, k, niter=niter, super_niter=super_niter, lamb=l)
 
