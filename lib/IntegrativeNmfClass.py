@@ -1,11 +1,8 @@
-import numpy as np
-from lib.functions import *
-from scipy.cluster.hierarchy import linkage, leaves_list
-from scipy.spatial.distance import squareform
+from lib.JointNmfClass import *
 
 
-class JointNmfClass:
-    def __init__(self, x: dict, k: int, niter: int, super_niter: int):
+class IntegrativeNmfClass(JointNmfClass):
+    def __init__(self, x: dict, k: int, niter: int, super_niter: int, lamb: int):
         self.x = x
         self.k = k
         self.niter = niter
@@ -15,7 +12,12 @@ class JointNmfClass:
         self.cmw = None
         self.w = None
         self.h = None
+        self.v = None
         self.z_score = None
+
+        self.lamb = lamb
+        self.slamb = None
+        self.error = float('inf')
 
         self.initialize_variables()
         self.eps = np.finfo(self.w.dtype).eps
@@ -32,26 +34,34 @@ class JointNmfClass:
             self.cmh[key] = np.zeros((self.x[key].shape[1], self.x[key].shape[1]))
             self.z_score[key] = np.zeros((self.k, self.x[key].shape[1]))
             self.cmz = self.cmh
+
         self.initialize_wh()
 
     def initialize_wh(self):
         number_of_samples = list(self.x.values())[0].shape[0]
         self.w = np.random.rand(number_of_samples, self.k)
+
+        self.v = {}
         self.h = {}
         for key in self.x:
             self.h[key] = np.random.rand(self.k, self.x[key].shape[1])
+            self.v[key] = np.random.rand(number_of_samples, self.k)
 
     def update_weights(self):
         w = self.w
+        v = self.v
+        h = self.h
         numerator = np.zeros(w.shape)
-        denominator = np.zeros((w.shape[1], w.shape[1]))
+        denominator = np.zeros(w.shape)
 
         for key, value in self.x.items():
-            numerator = numerator + np.dot(self.x[key], self.h[key].T)
-            denominator = denominator + np.dot(self.h[key], self.h[key].T)
-            self.h[key] = self.h[key] * np.dot(w.T, self.x[key]) / np.dot(np.dot(w.T, w), self.h[key])
+            numerator = numerator + np.dot(self.x[key], h[key].T)
+            denominator = denominator + np.dot(w+v[key], np.dot(h[key], h[key].T))
 
-        self.w = self.w * numerator / np.dot(w, denominator)
+            self.h[key] = h[key] * np.dot((w + v[key]).T, self.x[key]) / (np.dot(np.dot((w+v[key]).T, w+v[key]), h[key]) + self.lamb * np.dot(v[key].T, np.dot(v[key], h[key])))
+            self.v[key] = np.dot(self.x[key], h[key].T)/ (np.dot(w+v[key], np.dot(h[key], h[key].T)) + self.lamb * np.dot(v[key], np.dot(h[key], h[key].T)))
+
+        self.w = self.w * numerator / denominator
         self.calc_error()
 
     def wrapper_update(self, verbose=0):
@@ -105,5 +115,3 @@ class JointNmfClass:
         self.error = 0
         for key in self.x:
             self.error += np.mean(np.abs(self.x[key] - np.dot(self.w, self.h[key])))
-
-    # TODO - Understand this func

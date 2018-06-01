@@ -5,6 +5,9 @@ from scipy.cluster.hierarchy import linkage, leaves_list
 from scipy.spatial.distance import squareform
 
 
+
+
+
 class NmfModel:
 
     def __init__(self, a: np.array, k: int, niter: int, super_niter: int):
@@ -50,8 +53,8 @@ class NmfModel:
             self.consensus_matrix_w += self.connectivity_matrix_w()
         self.consensus_matrix_h /= self.super_niter
         self.consensus_matrix_w /= self.super_niter
-        self.consensus_matrix_w = self.reorderConsensusMatrix(self.consensus_matrix_w)
-        self.consensus_matrix_h = self.reorderConsensusMatrix(self.consensus_matrix_h)
+        self.consensus_matrix_w = reorderConsensusMatrix(self.consensus_matrix_w)
+        self.consensus_matrix_h = reorderConsensusMatrix(self.consensus_matrix_h)
 
     def calc_error(self):
         self.error = np.mean(np.abs(self.X - np.dot(self.w, self.h)))
@@ -74,12 +77,3 @@ class NmfModel:
         max_index[self.w == max_tiled] = 1
         return np.dot(max_index, max_index.T)
 
-    # TODO - Understand this func
-    def reorderConsensusMatrix(self, M):
-        M = pd.DataFrame(M)
-        Y = 1 - M
-        Z = linkage(squareform(Y), method='average')
-        ivl = leaves_list(Z)
-        ivl = ivl[::-1]
-        reorderM = pd.DataFrame(M.as_matrix()[:, ivl][ivl, :], index=M.columns[ivl], columns=M.columns[ivl])
-        return reorderM.as_matrix()
