@@ -1,11 +1,16 @@
 import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
 from scipy.cluster.hierarchy import linkage, leaves_list
 from scipy.spatial.distance import squareform
 import os
 from pathlib import Path as pth
 import sys
+import matplotlib as mpl
+if os.environ.get('DISPLAY', '') == '':
+    print('no display found. Using non-interactive Agg backend')
+    mpl.use('Agg')
+from matplotlib import pyplot as plt
+
 
 os.chdir(pth(__file__).parent.parent)
 cwd = pth(os.getcwd())
