@@ -6,8 +6,8 @@ from lib.IntegrativeJnmfClass import *
 k_list = [2, 3, 5, 7, 4, 10]
 lamb = [1, 0.1, 10]
 save = 1
-niter = 5
-super_niter = 2
+niter = 250
+super_niter = 50
 data_set = [
             "simulated",
             "large",
