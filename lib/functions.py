@@ -29,10 +29,11 @@ def rms(x: np.array, y: np.array):
     return np.mean(np.abs(x - y))
 
 
-def heatmap(x, title, show_flag=1, save=0):
+def heatmap(x, title, folder: str, show_flag=1, save=0):
     if str(x.__class__) == "<class 'numpy.ndarray'>":
         plt.suptitle(title)
         plt.imshow(x, cmap="magma", interpolation="nearest")
+
     elif str(x.__class__) == "<class 'dict'>":
         plt.suptitle(title)
         length = x.__len__()
@@ -44,8 +45,8 @@ def heatmap(x, title, show_flag=1, save=0):
             i += 1
 
     if save == 1:
-        fig_path = cwd / pth("plots/%s" % pth(sys.argv[0]).stem)
-        fig_path.mkdir(exist_ok=True)
+        fig_path = cwd / pth("plots/%s-data/" % folder)
+        fig_path.mkdir(exist_ok=True, parents=True)
         fig_path = fig_path / pth("%s.jpg" % title)
         plt.savefig(fig_path)
     elif show_flag == 1:
