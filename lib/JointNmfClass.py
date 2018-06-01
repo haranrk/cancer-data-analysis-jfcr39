@@ -1,6 +1,8 @@
 from lib.functions import *
 
 
+# Abstract Class - Do not instantiate this class
+
 class JointNmfClass:
     def __init__(self, x: dict, k: int, niter: int, super_niter: int):
         self.x = x
