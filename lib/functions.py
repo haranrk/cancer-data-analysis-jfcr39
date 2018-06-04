@@ -51,7 +51,7 @@ def heatmap(x, title, folder: str, show_flag=1, save=0):
         plt.savefig(fig_path)
     elif show_flag == 1:
         plt.show()
-#
+
 # def heatmap_dict(x: dict, title, show_flag=1, save=0):
 #     plt.suptitle(title)
 #     length = x.__len__()
