@@ -1,5 +1,5 @@
 import numpy as np
-
+import pandas as pd
 
 class ToyMatrix:
     def __init__(self, method='a'):
@@ -82,7 +82,7 @@ class ToyMatrix:
         self.x['a'] = X1 + 0.5 * np.random.rand(30, 90)
         self.x['b'] = X2 + 0.5 * np.random.rand(30, 120)
         self.x['c'] = X3 + 0.5 * np.random.rand(30, 150)
-
+        self.x = {k:pd.DataFrame(self.x[k], columns=list(range(self.x[k].shape[1]))) for k in self.x}
         # plt.imshow(self.XX1, cmap='hot', interpolation='nearest')
         # plt.colorbar()
         # plt.show()

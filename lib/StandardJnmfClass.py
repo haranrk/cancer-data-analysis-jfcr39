@@ -2,12 +2,13 @@ from lib.JointNmfClass import *
 
 
 class StandardNmfClass(JointNmfClass):
-    def __init__(self, x: dict, k: int, niter: int, super_niter: int):
-        super(StandardNmfClass, self).__init__(x, k, niter, super_niter)
+    def __init__(self, x: dict, k: int, niter: int, super_niter: int, thresh: float):
+        super(StandardNmfClass, self).__init__(x, k, niter, super_niter, thresh)
 
     def initialize_wh(self):
         number_of_samples = list(self.x.values())[0].shape[0]
         self.w = np.random.rand(number_of_samples, self.k)
+        
         self.h = {}
         for key in self.x:
             self.h[key] = np.random.rand(self.k, self.x[key].shape[1])
