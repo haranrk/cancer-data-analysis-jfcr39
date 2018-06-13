@@ -1,4 +1,4 @@
-#Joint NMF analysis on Cancer Genome Data
+# Joint NMF analysis on Cancer Genome Data
 
 Attempting to analyse Cancer Line Data from CCLE, specifically the following data - 
 1. Response of Cell line to drug
