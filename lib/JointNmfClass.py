@@ -7,10 +7,10 @@ def classify_by_max(x: np.array):
 
 
 def classify_by_z(x: np.array, thresh):
-        a = (x-np.mean(x, axis=1).reshape((-1, 1)))/(np.std(x, axis=1)).reshape((-1, 1))
-        classification = np.zeros(a.shape)
-        classification[a>thresh] = 1
-        return classification
+    a = (x - np.mean(x, axis=1).reshape((-1, 1))) / (np.std(x, axis=1)).reshape((-1, 1))
+    classification = np.zeros(a.shape)
+    classification[a > thresh] = 1
+    return classification
 
 
 # Abstract Class - Do not instantiate this class
@@ -29,8 +29,6 @@ class JointNmfClass:
         self.k = k
         self.niter = niter
         self.super_niter = super_niter
-        self.cmz = None
-        self.cmh = None
         self.cmw = None
         self.w = None
         self.h = None
@@ -43,32 +41,29 @@ class JointNmfClass:
         number_of_samples = list(self.x.values())[0].shape[0]
 
         self.cmw = np.zeros((number_of_samples, number_of_samples))
-        self.w_avg = np.zeros((number_of_samples, self.k))
+        # self.w_avg = np.zeros((number_of_samples, self.k))
 
-        self.h_avg = {}
+        # self.h_avg = {}
         self.max_class = {}
-        self.max_class_avg = {}
+        self.max_class_cm = {}
         self.z_class = {}
-        self.z_class_avg = {}
+        self.z_class_cm = {}
         self.z_score = {}
-        self.cmh = {}
-        self.cmz = {}
+
         for key in self.x:
             number_of_features = self.x[key].shape[1]
-            self.h_avg[key] = np.zeros((self.k, number_of_features))
+            # self.h_avg[key] = np.zeros((self.k, number_of_features))
             self.max_class[key] = np.zeros((self.k, number_of_features))
-            self.max_class_avg[key] = np.zeros((self.k, number_of_features))
+            self.max_class_cm[key] = np.zeros((number_of_features, number_of_features))
             self.z_class[key] = np.zeros((self.k, number_of_features))
-            self.z_class_avg[key] = np.zeros((self.k, number_of_features))
+            self.z_class_cm[key] = np.zeros((number_of_features, number_of_features))
             self.z_score[key] = np.zeros((self.k, number_of_features))
-
-            self.cmh[key] = np.zeros((number_of_features, number_of_features))
-            self.cmz[key] = np.zeros((number_of_features, number_of_features))
 
     def wrapper_update(self, verbose=0):
         for i in range(1, self.niter):
             self.update_weights()
-            if verbose == 1 and i % 1 == 0:
+            # for key in self.x:
+            if verbose == 1 and i % 10 == 0:
                 print("\t\titer: %i | error: %f" % (i, self.error))
 
     def super_wrapper(self, verbose=0):
@@ -82,41 +77,42 @@ class JointNmfClass:
                 self.wrapper_update(verbose=0)
 
             self.cmw += self.connectivity_matrix_w()
-            self.w_avg += self.w
+            # self.w_avg += self.w
+
 
             for key in self.h:
-                self.h_avg[key] += self.h[key]
-                self.cmh[key] += self.connectivity_matrix_h(key)
-                self.max_class_avg[key] += classify_by_max(self.h[key])
-                self.z_class_avg[key] += classify_by_z(self.h[key], self.thresh)
+                # self.h_avg[key] += self.h[key]
+                connectivity_matrix = lambda a: np.dot(a.T, a)
+                self.max_class_cm[key] += connectivity_matrix(classify_by_max(self.h[key]))
+                self.z_class_cm[key] += connectivity_matrix(classify_by_z(self.h[key], self.thresh))
 
         # Normalization
-        self.w_avg = self.w_avg/self.super_niter
+        # self.w_avg = self.w_avg/self.super_niter
         self.cmw = reorderConsensusMatrix(self.cmw / self.super_niter)
 
         for key in self.h:
-            self.h_avg[key] /= self.super_niter
-            self.max_class_avg[key] /= self.super_niter
-            self.z_class_avg[key] /= self.super_niter
-            self.cmh[key] = reorderConsensusMatrix(self.cmh[key] / self.super_niter)
+            # self.h_avg[key] /= self.super_niter
+            self.max_class_cm[key]/=self.super_niter
+            self.z_class_cm[key]/=self.super_niter
+            self.max_class_cm[key] = reorderConsensusMatrix(self.max_class_cm[key])
+            # self.z_class_cm[key] = reorderConsensusMatrix(self.z_class_cm[key])
         self.calc_z_score()
 
         # Classification
-        for key, val in self.h_avg.items():
+        for key, val in self.h.items():
             self.max_class[key] = classify_by_max(val)
             self.z_class[key] = classify_by_z(val, self.thresh)
 
         # Converting values to DataFrames
         class_list = ["class-%i" % a for a in list(range(self.k))]
+        # noinspection PyCallingNonCallable
         self.w = pd.DataFrame(self.w, index=random.choice(list(self.x_df.values())).index, columns=class_list)
 
         self.h = self.conv_dict_np_to_df(self.h)
-        self.h_avg = self.conv_dict_np_to_df(self.h_avg)
+        # self.h_avg = self.conv_dict_np_to_df(self.h_avg)
         self.z_score = self.conv_dict_np_to_df(self.z_score)
         self.max_class = self.conv_dict_np_to_df(self.max_class)
-        self.max_class_avg = self.conv_dict_np_to_df(self.max_class_avg)
         self.z_class = self.conv_dict_np_to_df(self.z_class)
-        self.z_class_avg = self.conv_dict_np_to_df(self.z_class_avg)
 
     def conv_dict_np_to_df(self, a: dict):
         class_list = ["class-%i" % a for a in list(range(self.k))]
@@ -126,24 +122,7 @@ class JointNmfClass:
     def calc_z_score(self):
         for key in self.h:
             self.z_score[key] = (self.h[key] - np.mean(self.h[key], axis=1).reshape((-1, 1))) / (
-                        self.eps + np.std(self.h[key], axis=1).reshape((-1, 1)))
-
-
-
-
-
-
-    # def cluster_vals_max(self):
-    #     for k in 
-    #     max_tiled = np.tile(self.h[key].max(0), (self.h[key].shape[0], 1))
-    #     max_index = np.zeros(self.h[key].shape)
-    #     max_index[self.h[key] == max_tiled] = 1
-
-    def connectivity_matrix_h(self, key):
-        max_tiled = np.tile(self.h[key].max(0), (self.h[key].shape[0], 1))
-        max_index = np.zeros(self.h[key].shape)
-        max_index[self.h[key] == max_tiled] = 1
-        return np.dot(max_index.T, max_index)
+                    self.eps + np.std(self.h[key], axis=1).reshape((-1, 1)))
 
     def connectivity_matrix_w(self):
         max_tiled = np.tile(self.w.max(1).reshape((-1, 1)), (1, self.w.shape[1]))
@@ -161,6 +140,3 @@ class JointNmfClass:
 
     def initialize_wh(self):
         raise NotImplementedError("Must override initialize_wh")
-
-    def cluster(self):
-        pass
