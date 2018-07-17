@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
-from scipy.cluster.hierarchy import linkage, leaves_list
+from scipy.cluster.hierarchy import linkage, leaves_list, cophenet
+import fastcluster as fc
 from scipy.spatial.distance import squareform
 import os
 from pathlib import Path as pth
@@ -13,15 +14,15 @@ import sys
 from matplotlib import pyplot as plt
 import seaborn as sns
 
-os.chdir(pth(__file__).parent.parent)
-cwd = pth(os.getcwd())
+def clean_df(x: pd.DataFrame, axis=1):
+    if axis == 1:
+        y = x[x.notna().all(axis=1)]
+    if axis == 0:
+        x = x.T
+        y = x[x.notna().all(axis=1)]
+        y = y.T
 
-
-def clean_df(x: pd.DataFrame):
-    y = x[x.notna().all(axis=1)]
     # y = x[x.notna().any(axis=1)]
-    y = y.fillna(0)
-
     return y
 
 
@@ -89,3 +90,13 @@ def reorderConsensusMatrix(M: np.array):
     ivl = ivl[::-1]
     reorderM = pd.DataFrame(M.values[:, ivl][ivl, :], index=M.columns[ivl], columns=M.columns[ivl])
     return reorderM.values
+
+def calc_cophenetic_correlation(consensus_matrix):
+    ori_dists = fc.pdist(consensus_matrix)
+    Z = fc.linkage(ori_dists, method='average')
+    [coph_corr, coph_dists] = cophenet(Z, ori_dists)
+    return coph_corr
+
+def cluster_data(x: np.array):
+    a = (x == np.amax(x, axis=0)).astype(float)
+    return a.T.sort_values(by=list(a.index)).T
