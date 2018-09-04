@@ -1,9 +1,5 @@
-# Joint NMF analysis on Cancer Genome Data
+# Integrated Genome Drug Cancer analysis
+Used the [JFCR39](https://www.ncbi.nlm.nih.gov/pubmed/22336246) dataset to find cancer biomarkers and tumour dependencies. Leveraged the jNMF(joint non-negative matrix factorization) algorithm to conduct the analysis.
 
-Attempting to analyse Cancer Line Data from CCLE, specifically the following data - 
-1. Response of Cell line to drug
-2. Mutatuion of Cell Line
-3. Protein Expression
-
-By the analysis, we want to find out the correlation of these above different Data with each other. 
-For example, are certain genes sensitive to certain drugs.
+#
+_Done as a part of summer research internship at the [FAiS lab](http://fais.hgc.jp/), University of Tokyo, 2018._
